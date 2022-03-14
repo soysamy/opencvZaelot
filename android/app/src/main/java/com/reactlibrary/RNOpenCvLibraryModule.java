@@ -3,6 +3,9 @@ package com.reactlibrary;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+
+import java.util.function.Function;
+
 import com.facebook.react.bridge.Callback;
 
 import android.graphics.Bitmap;
@@ -28,6 +31,11 @@ public class RNOpenCvLibraryModule extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "RNOpenCvLibrary";
+    }
+
+    @ReactMethod
+    public String testMethod(){
+        return "test return value";
     }
 
     @ReactMethod
