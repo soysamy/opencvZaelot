@@ -7,12 +7,12 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import { RNCamera as Camera } from 'react-native-camera';
+// import { RNCamera as Camera } from 'react-native-camera';
 import Toast, { DURATION } from 'react-native-easy-toast';
-
 import styles from './style';
 import OpenCV from '../NativeModules/OpenCV';
 import CircleWithinCircle from '../assets/svg/CircleWithinCircle';
+import VisionCamera from './VisionCamera';
 
 export default class CameraScreen extends Component {
   constructor(props) {
@@ -32,18 +32,23 @@ export default class CameraScreen extends Component {
       content: '',
       isPhotoPreview: false,
       photoPath: '',
+      onInitialized: false,
     },
   };
+
+  componentDidMount() {
+    this.setState({ onInitialized: true });
+  }
 
   checkForBlurryImage(imageAsBase64) {
     return new Promise((resolve, reject) => {
       if (Platform.OS === 'android') {
         OpenCV.checkForBlurryImage(
           imageAsBase64,
-          error => {
+          (error) => {
             // error handling
           },
-          msg => {
+          (msg) => {
             console.log(`VALUE: ${msg}`);
             resolve(msg);
           },
@@ -60,7 +65,7 @@ export default class CameraScreen extends Component {
     const { content, photoPath } = this.state.photoAsBase64;
 
     this.checkForBlurryImage(content)
-      .then(blurryPhoto => {
+      .then((blurryPhoto) => {
         if (blurryPhoto) {
           this.toast.show('Photo is blurred!', DURATION.FOREVER);
           return this.repeatPhoto();
@@ -74,7 +79,7 @@ export default class CameraScreen extends Component {
           },
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log('err', err);
       });
   }
@@ -115,7 +120,7 @@ export default class CameraScreen extends Component {
       return (
         <View style={styles.container}>
           <Toast
-            ref={toast => {
+            ref={(toast) => {
               this.toast = toast;
             }}
             position="center"
@@ -144,17 +149,7 @@ export default class CameraScreen extends Component {
 
     return (
       <View style={styles.container}>
-        <Camera
-          ref={cam => {
-            this.camera = cam;
-          }}
-          style={styles.preview}
-          androidCameraPermissionOptions={{
-            title: 'Permission to use camera',
-            message: 'We need your permission to use your camera',
-            buttonPositive: 'Ok',
-            buttonNegative: 'Cancel',
-          }}>
+        <VisionCamera>
           <View style={styles.takePictureContainer}>
             <TouchableOpacity onPress={this.takePicture}>
               <View>
@@ -162,9 +157,9 @@ export default class CameraScreen extends Component {
               </View>
             </TouchableOpacity>
           </View>
-        </Camera>
+        </VisionCamera>
         <Toast
-          ref={toast => {
+          ref={(toast) => {
             this.toast = toast;
           }}
           position="center"

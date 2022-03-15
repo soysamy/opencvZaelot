@@ -40,9 +40,8 @@ public class RNOpenCvLibraryModule extends ReactContextBaseJavaModule {
             byte[] decodedString = Base64.decode(imageAsBase64, Base64.DEFAULT);
             Bitmap image = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
-
-//      Bitmap image = decodeSampledBitmapFromFile(imageurl, 2000, 2000);
-            int l = CvType.CV_8UC1; //8-bit grey scale image
+            // Bitmap image = decodeSampledBitmapFromFile(imageurl, 2000, 2000);
+            int l = CvType.CV_8UC1; // 8-bit grey scale image
             Mat matImage = new Mat();
             Utils.bitmapToMat(image, matImage);
             Mat matImageGrey = new Mat();
@@ -58,7 +57,8 @@ public class RNOpenCvLibraryModule extends ReactContextBaseJavaModule {
             Mat laplacianImage8bit = new Mat();
             laplacianImage.convertTo(laplacianImage8bit, l);
 
-            Bitmap bmp = Bitmap.createBitmap(laplacianImage8bit.cols(), laplacianImage8bit.rows(), Bitmap.Config.ARGB_8888);
+            Bitmap bmp = Bitmap.createBitmap(laplacianImage8bit.cols(), laplacianImage8bit.rows(),
+                    Bitmap.Config.ARGB_8888);
             Utils.matToBitmap(laplacianImage8bit, bmp);
             int[] pixels = new int[bmp.getHeight() * bmp.getWidth()];
             bmp.getPixels(pixels, 0, bmp.getWidth(), 0, 0, bmp.getWidth(), bmp.getHeight());
@@ -68,7 +68,7 @@ public class RNOpenCvLibraryModule extends ReactContextBaseJavaModule {
                     maxLap = pixel;
             }
 
-//            int soglia = -6118750;
+            // int soglia = -6118750;
             int soglia = -8118750;
             if (maxLap <= soglia) {
                 System.out.println("is blur image");
